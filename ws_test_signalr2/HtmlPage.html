@@ -6,8 +6,12 @@
 </head>
 <body>
     <h1>test33</h1>
-    <div id="msg">
-    </div>
+    <input type="text" id="gname" value="" /><input type="button" value="addGroup" id="addGroup"/> <input type="button" value="remove group" id="removeGroup"/>
+                                               <br />
+    sendMsg <input type="text" id="sendMsg" /> <button id="sendMsgToGroup">send message to group</button>
+                                               <br />
+    receivemsg <span id="receiveMsgSpan"></span>
+               <br />
     <script src="/Scripts/jquery-1.6.4.min.js"></script>
     <!--Reference the SignalR library. -->
     <script src="/Scripts/jquery.signalR-1.1.4.js"></script>
@@ -27,11 +31,31 @@
             hubProxy.client.clientMethod2=function (obj) {
                 console.log(obj);
             };
+            hub.client.receiveMessageFromGroup = function (msg) {
+                $('#receiveMsgSpan').text(msg);
+            };
 
+            let $gname = $('#gname');
+            let getGName = () => $gname.val();
+            let getSendMessage = () => $('#sendMsg').val();
             $.connection.hub.start().done(function () {
                 //hubProxy.server.serverMethod1();
                 //hubProxy.server.testAsync().done(i => console.log(i));
-                console.log('done')
+                console.log('done');
+                $('#addGroup').bind('click', () => {
+                    hub.server.addToGroup(getGName());
+                });
+                $('#removeGroup').bind('click', () => {
+                    hub.server.removeFromGroup(getGName());
+                });
+
+                $('#sendMsgToGroup').bind('click', function (e) {
+                    e.preventDefault();
+                    hub.server.sendMessageToGroup(getGName(), getSendMessage());
+                })
+
+
+
 
             });
 

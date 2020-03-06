@@ -21,6 +21,8 @@ public class MyHub : Hub
     }
     public void ServerMethod1(int i)
     {
+        //Clients.Gr
+        
         Clients.All.ClientMethod1(i + 1);
         //連接識別碼所識別的特定用戶端
         //Clients.Client(Context.ConnectionId).addContosoChatMessageToPage(name, message);
@@ -40,6 +42,22 @@ public class MyHub : Hub
     {
         return Context.ConnectionId;
     }
+
+    public void AddToGroup(String gname)
+    {
+        Groups.Add(Context.ConnectionId, gname);
+    }
+
+    public void RemoveFromGroup(String gname)
+    {
+        Groups.Remove(Context.ConnectionId,gname);
+    }
+
+    public void SendMessageToGroup(String gname, String msg)
+    {
+        Clients.Group(gname).ReceiveMessageFromGroup(msg);
+    }
+
 
     //public dynamic GetContext()
     //{
